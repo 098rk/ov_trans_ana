@@ -1,0 +1,597 @@
+# import pandas as pd
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import seaborn as sns
+# from sklearn.decomposition import PCA
+# from scipy.stats import ttest_ind
+#
+# # Load the dataset
+# df = pd.read_csv(r"D:\ProjectFiles\Geeks\saptial\Parent_Visium_Human_OvarianCancer_analysis\analysis\umap\2_components\projection.csv")
+# print("Dataset Head:\n", df.head())
+#
+# # Summary statistics
+# print("\nSummary Statistics:\n", df.describe())
+#
+# # Check for necessary columns for significant genes analysis
+# if {'log2FoldChange', 'padj'}.issubset(df.columns):
+#     # Identifying significant genes
+#     sig_threshold = 0.05
+#     df['Significant'] = (df['padj'] < sig_threshold) & (abs(df['log2FoldChange']) > 1)
+#     print(f"\nNumber of significant genes: {df['Significant'].sum()}")
+#
+#     # Volcano Plot
+#     plt.figure(figsize=(8, 6))
+#     sns.scatterplot(data=df, x='log2FoldChange', y=-np.log10(df['padj']), hue='Significant', alpha=0.7)
+#     plt.axhline(-np.log10(sig_threshold), linestyle='--', color='red', label='p = 0.05')
+#     plt.xlabel("Log2 Fold Change")
+#     plt.ylabel("-Log10 Adjusted p-value")
+#     plt.title("Volcano Plot")
+#     plt.legend()
+#     plt.show()
+#
+# # UMAP Plot using 'Barcode', 'UMAP-1', and 'UMAP-2'
+# plt.figure(figsize=(10, 8))
+#
+# # Check if 'Significant' column exists and plot accordingly
+# if 'Significant' in df.columns:
+#     sns.scatterplot(data=df, x='UMAP-1', y='UMAP-2', hue='Significant', alpha=0.7)
+# else:
+#     sns.scatterplot(data=df, x='UMAP-1', y='UMAP-2', alpha=0.7)
+#
+# plt.title("UMAP Plot")
+# plt.xlabel("UMAP-1")
+# plt.ylabel("UMAP-2")
+# plt.show()
+#
+# # Hierarchical Clustering Heatmap (requires 'gene' column)
+# if 'gene' in df.columns:
+#     df_sorted = df.sort_values('padj').head(50)  # Top 50 most significant genes
+#     heatmap_data = df_sorted.pivot(index='gene', columns='log2FoldChange', values='padj')
+#     plt.figure(figsize=(10, 8))
+#     sns.heatmap(heatmap_data, cmap="coolwarm", annot=True)
+#     plt.title("Hierarchical Clustering Heatmap")
+#     plt.show()
+#
+# # PCA Analysis (requires 'gene' column)
+# if 'gene' in df.columns:
+#     numeric_data = df.drop(columns=['gene']).dropna()
+#     pca = PCA(n_components=2)
+#     pca_result = pca.fit_transform(numeric_data)
+#     plt.figure(figsize=(8, 6))
+#     plt.scatter(pca_result[:, 0], pca_result[:, 1], alpha=0.5)
+#     plt.xlabel("PC1")
+#     plt.ylabel("PC2")
+#     plt.title("PCA Plot")
+#     plt.show()
+#
+# # T-tests Between Clusters (if applicable)
+# if 'cluster' in df.columns:
+#     cluster_groups = df.groupby('cluster')['log2FoldChange']
+#     clusters = list(cluster_groups.groups.keys())
+#     if len(clusters) >= 2:
+#         t_stat, p_val = ttest_ind(cluster_groups.get_group(clusters[0]), cluster_groups.get_group(clusters[1]))
+#         print(f"\nT-test Between Clusters {clusters[0]} and {clusters[1]}: p-value = {p_val}")
+#
+# print("\nAnalysis Complete.")
+#
+#
+#
+# # Load the dataset
+# df = pd.read_csv(r"D:\ProjectFiles\Geeks\saptial\Parent_Visium_Human_OvarianCancer_analysis\analysis\tsne\2_components\projection.csv")
+# print("Dataset Head:\n", df.head())
+#
+# # Summary statistics
+# print("\nSummary Statistics:\n", df.describe())
+#
+# # t-SNE Plot using 'Barcode', 'TSNE-1', and 'TSNE-2'
+# plt.figure(figsize=(10, 8))
+# sns.scatterplot(data=df, x='TSNE-1', y='TSNE-2', alpha=0.7)
+# plt.title("t-SNE Plot")
+# plt.xlabel("TSNE-1")
+# plt.ylabel("TSNE-2")
+# plt.show()
+#
+# print("\nAnalysis Complete.")
+#
+# # Assuming you have a 'Significant' or 'Cluster' column to color points
+# if 'Significant' in df.columns:
+#     plt.figure(figsize=(10, 8))
+#     sns.scatterplot(data=df, x='TSNE-1', y='TSNE-2', hue='Significant', alpha=0.7)
+#     plt.title("t-SNE Plot with Significance")
+#     plt.xlabel("TSNE-1")
+#     plt.ylabel("TSNE-2")
+#     plt.legend()
+#     plt.show()
+# else:
+#     plt.figure(figsize=(10, 8))
+#     sns.scatterplot(data=df, x='TSNE-1', y='TSNE-2', alpha=0.7)
+#     plt.title("t-SNE Plot")
+#     plt.xlabel("TSNE-1")
+#     plt.ylabel("TSNE-2")
+#     plt.show()
+#
+# # Step 1: Load the dataset
+# df = pd.read_csv(r"D:\ProjectFiles\Geeks\saptial\Parent_Visium_Human_OvarianCancer_analysis\analysis\pca\10_components\dispersion.csv")  # Update with your file path
+#
+# # Step 2: Display basic information
+# print("Dataset Head:\n", df.head())
+# print("\nDataset Shape:", df.shape)
+# print("\nData Types:\n", df.dtypes)
+#
+# # Step 3: Summary statistics of Normalized.Dispersion
+# print("\nSummary Statistics for Normalized.Dispersion:\n", df['Normalized.Dispersion'].describe())
+#
+# # Step 4: Visualizations
+#
+# # Histogram of Normalized.Dispersion
+# plt.figure(figsize=(10, 6))
+# sns.histplot(df['Normalized.Dispersion'], bins=30, kde=True)
+# plt.title('Distribution of Normalized.Dispersion')
+# plt.xlabel('Normalized Dispersion')
+# plt.ylabel('Frequency')
+# plt.grid()
+# plt.show()
+#
+# # Boxplot of Normalized.Dispersion
+# plt.figure(figsize=(10, 6))
+# sns.boxplot(x=df['Normalized.Dispersion'])
+# plt.title('Boxplot of Normalized.Dispersion')
+# plt.xlabel('Normalized Dispersion')
+# plt.grid()
+# plt.show()
+#
+# # Step 5: Outlier Detection
+# # Define threshold for outliers (e.g., 1.5 * IQR)
+# Q1 = df['Normalized.Dispersion'].quantile(0.25)
+# Q3 = df['Normalized.Dispersion'].quantile(0.75)
+# IQR = Q3 - Q1
+# lower_bound = Q1 - 1.5 * IQR
+# upper_bound = Q3 + 1.5 * IQR
+#
+# outliers = df[(df['Normalized.Dispersion'] < lower_bound) | (df['Normalized.Dispersion'] > upper_bound)]
+# print("\nOutliers Detected:\n", outliers)
+#
+# # Step 6: Correlation (if applicable)
+# # If you have other numerical features, you can analyze correlation.
+# # Uncomment and modify the following line as needed.
+# # correlation_matrix = df.corr()
+# # sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
+# # plt.title('Correlation Matrix')
+# # plt.show()
+#
+# print("\nAnalysis Complete.")
+#
+# import pandas as pd
+#
+#
+#
+# # Load the dataset
+# df = pd.read_csv(r"D:\ProjectFiles\Geeks\saptial\Parent_Visium_Human_OvarianCancer_analysis\analysis\pca\10_components\projection.csv")
+#
+# # Display the first few rows of the dataset
+# print("Dataset Head:\n", df.head())
+#
+# # Display the shape of the DataFrame
+# print("\nDataset Shape:", df.shape)
+#
+# # Summary statistics of the principal components (excluding the 'Barcode' column)
+# print("\nSummary Statistics:\n", df.describe())
+#
+# # Visualizing the distribution of each principal component
+# plt.figure(figsize=(12, 8))
+# for i in range(1, 11):  # For PC-1 to PC-10
+#     plt.subplot(3, 4, i)
+#     sns.boxplot(y=df[f'PC-{i}'], palette="Set3", hue=None)  # Changed to y to avoid warnings
+#     plt.title(f'Distribution of PC-{i}')
+#     plt.xlabel('Value')  # Changed from ylabel to xlabel for horizontal boxplots
+# plt.tight_layout()
+# plt.show()
+#
+# # Visualizing the pairwise relationships between principal components
+# sns.pairplot(df.iloc[:, 1:11], diag_kind='kde', markers='o')
+# plt.suptitle("Pairwise Relationships Between Principal Components", y=1.02)
+# plt.show()
+#
+# # Optional: PCA plot (if you want to visualize the first two principal components)
+# plt.figure(figsize=(10, 8))
+# sns.scatterplot(data=df, x='PC-1', y='PC-2', alpha=0.7)
+# plt.title("PCA Plot (PC-1 vs PC-2)")
+# plt.xlabel("PC-1")
+# plt.ylabel("PC-2")
+# plt.show()
+#
+# print("\nAnalysis Complete.")
+#
+# # Load the dataset
+# df = pd.read_csv(r"D:\ProjectFiles\Geeks\saptial\Parent_Visium_Human_OvarianCancer_analysis\analysis\pca\10_components\components.csv")
+#
+# # Display the first few rows of the dataset
+# print("Dataset Head:\n", df.head())
+#
+# # Display the shape of the DataFrame
+# print("\nDataset Shape:", df.shape)
+#
+# # Summary statistics of gene expression data (excluding the first column)
+# print("\nSummary Statistics:\n", df.describe())
+#
+# # Visualizing the distribution of gene expression values
+# plt.figure(figsize=(12, 8))
+# sns.boxplot(data=df.iloc[:, 1:], palette="Set3")
+# plt.title("Boxplot of Gene Expression Levels")
+# plt.xlabel("Genes")
+# plt.ylabel("Expression Levels")
+# plt.xticks(rotation=90)  # Rotate x labels for better readability
+# plt.show()
+#
+# # Visualizing correlations between genes (if necessary)
+# correlation_matrix = df.iloc[:, 1:].corr()
+# plt.figure(figsize=(12, 10))
+# sns.heatmap(correlation_matrix, cmap="coolwarm", annot=False, fmt=".2f")
+# plt.title("Gene Expression Correlation Matrix")
+# plt.show()
+#
+# # Optional: Performing PCA for dimensionality reduction and visualization
+# from sklearn.decomposition import PCA
+#
+# # Perform PCA on the gene expression data
+# pca = PCA(n_components=2)
+# pca_result = pca.fit_transform(df.iloc[:, 1:])  # Skip the 'PC' column
+#
+# # Create a DataFrame with PCA results
+# pca_df = pd.DataFrame(data=pca_result, columns=["PC1", "PC2"])
+#
+# # Plot PCA results
+# plt.figure(figsize=(10, 8))
+# sns.scatterplot(data=pca_df, x='PC1', y='PC2', alpha=0.7)
+# plt.title("PCA of Gene Expression Data")
+# plt.xlabel("Principal Component 1")
+# plt.ylabel("Principal Component 2")
+# plt.show()
+#
+# print("\nAnalysis Complete.")
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+df = pd.read_csv(r"D:\ProjectFiles\Geeks\saptial\Parent_Visium_Human_OvarianCancer_analysis\analysis\diffexp\graphclust\differential_expression.csv")
+
+# Display the first few rows of the dataset
+print(df.head())
+
+# Check for missing values
+print(df.isnull().sum())
+
+# Summary statistics
+print(df.describe())
+
+# Filter for significant genes (e.g., adjusted p-value < 0.05)
+significant_genes = df[(df['Cluster 1 Adjusted p value'] < 0.05) |
+                       (df['Cluster 2 Adjusted p value'] < 0.05) |
+                       (df['Cluster 3 Adjusted p value'] < 0.05) |
+                       (df['Cluster 4 Adjusted p value'] < 0.05) |
+                       (df['Cluster 5 Adjusted p value'] < 0.05) |
+                       (df['Cluster 6 Adjusted p value'] < 0.05) |
+                       (df['Cluster 7 Adjusted p value'] < 0.05) |
+                       (df['Cluster 8 Adjusted p value'] < 0.05)]
+
+print(f"Number of significant genes: {len(significant_genes)}")
+
+# Display the significant genes
+print(significant_genes)
+
+# Visualize the log2 fold change for significant genes across clusters
+plt.figure(figsize=(12, 8))
+for i in range(1, 9):
+    plt.subplot(2, 4, i)
+    sns.histplot(significant_genes[f'Cluster {i} Log2 fold change'], bins=30, kde=True)
+    plt.title(f'Cluster {i} Log2 Fold Change')
+    plt.xlabel('Log2 Fold Change')
+    plt.ylabel('Frequency')
+
+plt.tight_layout()
+plt.show()
+
+# Identify top differentially expressed genes in each cluster
+top_genes_per_cluster = {}
+for i in range(1, 9):
+    cluster_col = f'Cluster {i} Log2 fold change'
+    top_genes = significant_genes.nlargest(10, cluster_col)[['Feature ID', 'Feature Name', cluster_col]]
+    top_genes_per_cluster[f'Cluster {i}'] = top_genes
+
+# Display top genes per cluster
+for cluster, genes in top_genes_per_cluster.items():
+    print(f"Top 10 genes in {cluster}:")
+    print(genes)
+    print("\n")
+
+# Heatmap of log2 fold changes for significant genes
+significant_genes_log2fc = significant_genes[[f'Cluster {i} Log2 fold change' for i in range(1, 9)]]
+significant_genes_log2fc.index = significant_genes['Feature Name']
+
+plt.figure(figsize=(12, 8))
+sns.heatmap(significant_genes_log2fc, cmap='viridis', annot=True, fmt=".2f", linewidths=.5)
+plt.title('Log2 Fold Change of Significant Genes Across Clusters')
+plt.xlabel('Cluster')
+plt.ylabel('Gene')
+plt.show()
+
+# Save the significant genes to a new CSV file
+significant_genes.to_csv('significant_genes.csv', index=False)
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+df = pd.read_csv("D:\\ProjectFiles\\Geeks\\saptial\\Parent_Visium_Human_OvarianCancer_analysis\\analysis\\umap\\2_components\\projection.csv")  # Replace with the actual file path
+
+# Display the first few rows of the dataset
+print("First few rows of the dataset:")
+print(df.head())
+
+# Check for missing values
+print("\nMissing values in the dataset:")
+print(df.isnull().sum())
+
+# Summary statistics
+print("\nSummary statistics:")
+print(df.describe())
+
+# Visualize the UMAP embedding
+plt.figure(figsize=(10, 8))
+sns.scatterplot(x='UMAP-1', y='UMAP-2', data=df, s=10, alpha=0.7)
+plt.title("UMAP Visualization of Single-Cell Data")
+plt.xlabel("UMAP-1")
+plt.ylabel("UMAP-2")
+plt.grid(True)
+plt.show()
+
+# Density plot for UMAP-1 and UMAP-2
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+sns.kdeplot(df['UMAP-1'], fill=True, color='blue')
+plt.title("Density Plot for UMAP-1")
+plt.xlabel("UMAP-1")
+plt.ylabel("Density")
+
+plt.subplot(1, 2, 2)
+sns.kdeplot(df['UMAP-2'], fill=True, color='red')
+plt.title("Density Plot for UMAP-2")
+plt.xlabel("UMAP-2")
+plt.ylabel("Density")
+
+plt.tight_layout()
+plt.show()
+
+# Clustering (optional: if you want to identify clusters in the UMAP space)
+from sklearn.cluster import KMeans
+
+# Perform KMeans clustering (e.g., 5 clusters)
+kmeans = KMeans(n_clusters=5, random_state=42)
+df['Cluster'] = kmeans.fit_predict(df[['UMAP-1', 'UMAP-2']])
+
+# Visualize clusters in UMAP space
+plt.figure(figsize=(10, 8))
+sns.scatterplot(x='UMAP-1', y='UMAP-2', hue='Cluster', data=df, palette='viridis', s=10, alpha=0.7)
+plt.title("UMAP Visualization with Clusters")
+plt.xlabel("UMAP-1")
+plt.ylabel("UMAP-2")
+plt.legend(title='Cluster', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.grid(True)
+plt.show()
+
+# Save the clustered data to a new CSV file
+df.to_csv('clustered_umap_data.csv', index=False)
+
+
+# Load the dataset
+df = pd.read_csv("D:\\ProjectFiles\\Geeks\\saptial\\Parent_Visium_Human_OvarianCancer_analysis\\analysis\\tsne\\2_components\\projection.csv")  # Replace with the actual file path
+
+# Display the first few rows of the dataset
+print("First few rows of the dataset:")
+print(df.head())
+
+# Check for missing values
+print("\nMissing values in the dataset:")
+print(df.isnull().sum())
+
+# Summary statistics
+print("\nSummary statistics:")
+print(df.describe())
+
+# Visualize the t-SNE embedding
+plt.figure(figsize=(10, 8))
+sns.scatterplot(x='TSNE-1', y='TSNE-2', data=df, s=10, alpha=0.7)
+plt.title("t-SNE Visualization of Single-Cell Data")
+plt.xlabel("t-SNE-1")
+plt.ylabel("t-SNE-2")
+plt.grid(True)
+plt.show()
+
+# Density plot for t-SNE-1 and t-SNE-2
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+sns.kdeplot(df['TSNE-1'], fill=True, color='blue')
+plt.title("Density Plot for t-SNE-1")
+plt.xlabel("t-SNE-1")
+plt.ylabel("Density")
+
+plt.subplot(1, 2, 2)
+sns.kdeplot(df['TSNE-2'], fill=True, color='red')
+plt.title("Density Plot for t-SNE-2")
+plt.xlabel("t-SNE-2")
+plt.ylabel("Density")
+
+plt.tight_layout()
+plt.show()
+
+# Clustering (optional: if you want to identify clusters in the t-SNE space)
+from sklearn.cluster import KMeans
+
+# Perform KMeans clustering (e.g., 5 clusters)
+kmeans = KMeans(n_clusters=5, random_state=42)
+df['Cluster'] = kmeans.fit_predict(df[['TSNE-1', 'TSNE-2']])
+
+# Visualize clusters in t-SNE space
+plt.figure(figsize=(10, 8))
+sns.scatterplot(x='TSNE-1', y='TSNE-2', hue='Cluster', data=df, palette='viridis', s=10, alpha=0.7)
+plt.title("t-SNE Visualization with Clusters")
+plt.xlabel("t-SNE-1")
+plt.ylabel("t-SNE-2")
+plt.legend(title='Cluster', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.grid(True)
+plt.show()
+
+# Save the clustered data to a new CSV file
+df.to_csv('clustered_tsne_data.csv', index=False)
+
+
+
+# Load the dataset
+df = pd.read_csv("D:\\ProjectFiles\\Geeks\\saptial\\Parent_Visium_Human_OvarianCancer_analysis\\analysis\pca\\10_components\\components.csv", index_col="PC")  # Replace with the actual file path
+
+# Display the first few rows of the dataset
+print("First few rows of the dataset:")
+print(df.head())
+
+# Check for missing values
+print("\nMissing values in the dataset:")
+print(df.isnull().sum())
+
+# Summary statistics
+print("\nSummary statistics:")
+print(df.describe())
+
+# Visualize the variance explained by each principal component
+variance = df.var(axis=1)  # Variance of each PC
+plt.figure(figsize=(10, 6))
+plt.bar(range(1, len(variance) + 1), variance, color='skyblue')
+plt.title("Variance Explained by Each Principal Component")
+plt.xlabel("Principal Component (PC)")
+plt.ylabel("Variance")
+plt.grid(True)
+plt.show()
+
+# Scree plot to visualize the cumulative variance explained
+cumulative_variance = variance.cumsum() / variance.sum() * 100
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, len(cumulative_variance) + 1), cumulative_variance, marker='o', color='orange')
+plt.title("Cumulative Variance Explained by Principal Components")
+plt.xlabel("Number of Principal Components")
+plt.ylabel("Cumulative Variance Explained (%)")
+plt.grid(True)
+plt.show()
+
+# Heatmap of gene contributions to the top PCs
+top_pcs = df.iloc[:10, :]  # Select the top 10 PCs
+plt.figure(figsize=(12, 8))
+sns.heatmap(top_pcs, cmap='viridis', annot=False, linewidths=0.5)
+plt.title("Gene Contributions to Top 10 Principal Components")
+plt.xlabel("Genes (Ensembl IDs)")
+plt.ylabel("Principal Components (PCs)")
+plt.show()
+
+# Identify top contributing genes for each PC
+top_genes_per_pc = {}
+for pc in df.index:
+    top_genes = df.loc[pc].nlargest(10)  # Top 10 genes contributing to the PC
+    top_genes_per_pc[pc] = top_genes
+
+# Display top contributing genes for each PC
+for pc, genes in top_genes_per_pc.items():
+    print(f"Top 10 genes contributing to {pc}:")
+    print(genes)
+    print("\n")
+
+# Save the top contributing genes to a new CSV file
+top_genes_df = pd.DataFrame(top_genes_per_pc)
+top_genes_df.to_csv('top_genes_per_pc.csv')
+
+
+import pandas as pd
+
+# Step 1: Specify the file path to your CSV file
+file_path = "D:\\ProjectFiles\\Geeks\\saptial\\Parent_Visium_Human_OvarianCancer_analysis\\analysis\\pca\\10_components\\components.csv"  # Replace with the actual path to your CSV file
+
+# Step 2: Read the CSV file into a pandas DataFrame
+df = pd.read_csv(file_path)
+
+# Step 3: Extract unique gene IDs
+# Assuming the gene IDs are in columns after the first column (e.g., columns 1 onwards)
+unique_gene_ids = set()  # Use a set to store unique gene IDs
+
+# Iterate through each row and collect unique gene IDs
+for index, row in df.iterrows():
+    unique_gene_ids.update(row[1:])  # Skip the first column (PC) and add gene IDs to the set
+
+# Convert the set to a sorted list (optional)
+unique_gene_ids = sorted(unique_gene_ids)
+
+# Step 4: Display the unique gene IDs
+print("Unique Gene IDs:")
+print(unique_gene_ids)
+
+# Step 5: Count the number of unique gene IDs
+print(f"\nNumber of unique gene IDs: {len(unique_gene_ids)}")
+
+# Optional: Save the unique gene IDs to a new CSV file
+output_file_path = "unique_gene_ids.csv"
+pd.Series(unique_gene_ids).to_csv(output_file_path, index=False, header=False)
+print(f"\nUnique gene IDs saved to: {output_file_path}")
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Step 1: Load the CSV file into a pandas DataFrame
+file_path = "D:\\ProjectFiles\\Geeks\\saptial\\Parent_Visium_Human_OvarianCancer_analysis\\analysis\\pca\\10_components\\dispersion.csv"  # Replace with the actual path to your CSV file
+df = pd.read_csv(file_path)
+
+# Step 2: Display basic information about the dataset
+print("Dataset Info:")
+print(df.info())
+
+print("\nFirst 5 rows of the dataset:")
+print(df.head())
+
+# Step 3: Basic statistical analysis
+print("\nBasic Statistics:")
+print(df["Normalized.Dispersion"].describe())
+
+# Step 4: Check for missing values
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+# Step 5: Plot the distribution of Normalized Dispersion
+plt.figure(figsize=(10, 6))
+plt.hist(df["Normalized.Dispersion"], bins=30, color="blue", edgecolor="black")
+plt.title("Distribution of Normalized Dispersion")
+plt.xlabel("Normalized Dispersion")
+plt.ylabel("Frequency")
+plt.grid(True)
+plt.show()
+
+# Step 6: Scatter plot of Feature vs Normalized Dispersion (if applicable)
+# Note: This step assumes the "Feature" column is numeric or can be indexed.
+# If "Feature" is categorical, you may need to encode it first.
+
+plt.figure(figsize=(10, 6))
+plt.scatter(range(len(df)), df["Normalized.Dispersion"], color="green", alpha=0.5)
+plt.title("Scatter Plot of Normalized Dispersion")
+plt.xlabel("Feature Index")
+plt.ylabel("Normalized Dispersion")
+plt.grid(True)
+plt.show()
+
+# Step 7: Identify top features with highest and lowest dispersion
+top_high_dispersion = df.nlargest(10, "Normalized.Dispersion")
+top_low_dispersion = df.nsmallest(10, "Normalized.Dispersion")
+
+print("\nTop 10 Features with Highest Normalized Dispersion:")
+print(top_high_dispersion)
+
+print("\nTop 10 Features with Lowest Normalized Dispersion:")
+print(top_low_dispersion)
